@@ -5,7 +5,7 @@
 ;Carlos Mauricio Tovar Parra - 1741699
 ;Juan Pablo Velasco Mellizo - 1766616
 
-(define N 16)
+(define N 32)
 (define zero '())
 (define is-zero? (lambda (n) (null? n)))
 (define sucesor
