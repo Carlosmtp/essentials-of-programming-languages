@@ -5,14 +5,14 @@
 ;Carlos Mauricio Tovar Parra - 1741699
 ;Juan Pablo Velasco Mellizo - 1766616
 
-(define base 16)
+(define N 16)
 (define zero '())
 (define is-zero? (lambda (n) (null? n)))
 (define sucesor
   (lambda (n)
     (cond
     [(is-zero? n) '(1)]
-    [(= (car n) (- base 1))
+    [(= (car n) (- N 1))
      (cons 0 (sucesor (cdr n)))]
     [else (cons (+ (car n) 1 ) (cdr n))])))
 (define predecesor
@@ -20,5 +20,5 @@
     (cond
           [(is-zero? n) (eopl:error "No se puede representar el valor")]
       [(equal? n (sucesor zero)) '()]
-  [(= (car n) 0) (cons (- base 1) (predecesor (cdr n)))]
+  [(= (car n) 0) (cons (- N 1) (predecesor (cdr n)))]
       [else (cons (- (car n) 1 ) (cdr n))])))                                                            
