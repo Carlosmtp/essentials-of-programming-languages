@@ -18,7 +18,7 @@
 (define predecesor
     (lambda (n)
     (cond
-          [(is-zero? n) (eopl:error "No se puede representar el valor")]
+      [(is-zero? n) (eopl:error "No se puede representar el valor")]
       [(equal? n (sucesor zero)) '()]
-  [(= (car n) 0) (cons (- N 1) (predecesor (cdr n)))]
+      [(= (car n) 0) (cons (- N 1) (predecesor (cdr n)))]
       [else (cons (- (car n) 1 ) (cdr n))])))                                                            
