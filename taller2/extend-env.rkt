@@ -17,6 +17,15 @@
   (lambda (var val env)
     (list 'extend-env var val env)))
 
+;extend − env∗ 
+(define extend-env*
+  (lambda (vars vals env)
+    (if (null? vars)
+       env
+       (extend-env* (cdr vars)
+                   (cdr vals)
+                   (cons (cons (car vars) (car vals)) env)))))
+
 ;apply-env : Env × Var → SchemeVal
 (define apply-env
   (lambda (env search-var)
