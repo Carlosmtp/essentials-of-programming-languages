@@ -1,4 +1,5 @@
 #lang eopl
+(require rackunit)
 ;
 
 ;Diana Katherine Toro Ortiz - 2110046
@@ -17,14 +18,10 @@
   (lambda (var val env)
     (list 'extend-env var val env)))
 
-;extend − env∗ 
+;extend − env∗
 (define extend-env*
   (lambda (vars vals env)
-    (if (null? vars)
-       env
-       (extend-env* (cdr vars)
-                   (cdr vals)
-                   (cons (cons (car vars) (car vals)) env)))))
+    (list 'extend-env* vars vals env)))
 
 ;apply-env : Env × Var → SchemeVal
 (define apply-env
@@ -49,3 +46,48 @@ saved-val
 (define report-invalid-env
   (lambda (env)
     (eopl:error apply-env "Bad environment: ~s" env)))
+
+
+(define invert-env
+  (lambda (env)
+    (cond
+      [(null? env) (cons 'empty-env env)]
+      [else (cons (invert-env (cdr env)) (car env))])))
+
+(define count-env
+  (lambda (env count)
+    (cond
+      [(equal? (car env) 'empty-env) count]
+      [else (count-env (cadddr env) (+ count 1))])))
+
+(define cartesian-product
+  (lambda (lst1 lst2)
+    (cond
+      [(equal? (length lst1) (length lst2))
+       (cond
+         [(zero? (length lst1)) empty]
+         [else (cons (list (car lst1) (car lst2)) (cartesian-product (cdr lst1) (cdr lst2)))])]
+      [else (eopl:error 'cartesian-product: " Lists of different lengths have been entered")])))
+
+(define check-env
+  (lambda (env n)
+    (cond
+      [(= n 0) '()]
+      [(> n (count-env env 0)) (eopl:error 'check-env: " Not possible to search depth on environment")]
+      [(= n (count-env env 0))
+       (cond
+         [(equal? (car env) 'extend-env) (list (list (cadr env) (caddr env)))]
+         [(equal? (car env) 'extend-env*) (cartesian-product (cadr env) (caddr env))])]
+      [else (check-env (cadddr env) n)]
+      )))
+
+(define e
+  (extend-env 'y 8
+             (extend-env* '(x z w) '(1 4 5)
+                         (extend-env 'a 7
+                                    (empty-env)))))
+
+(check-equal? (check-env e 0) '())
+(check-equal? (check-env e 1) '((a 7)))
+(check-equal? (check-env e 2) '((x 1) (z 4) (w 5)))
+(check-equal? (check-env e 3) '((y 8)))
