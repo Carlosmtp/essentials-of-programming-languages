@@ -1,45 +1,30 @@
 #lang eopl
-;
 
 ;Diana Katherine Toro Ortiz - 2110046
 ;Carlos Mauricio Tovar Parra - 1741699
 ;Juan Pablo Velasco Mellizo - 1766616
 
+
+;       Gramática
+
 ; <stack> ::= (empty-stack)
 ;              ::=(push <scheme-value> <stack>)
 
+
+;----------------------------------------------------------------------------------------------------
+;scheme-value? : value → boolean
+;usage : (scheme-value? value) = funcion de scheme que valida su un valor ingresado es correcto
+
 (define scheme-value? (lambda (value) #t))
+
+;stack : ()|(push (val X scheme-value?)) → stack 
+;usage : (stack) = constructor del stack con datatypes
 
 (define-datatype stack stack?
   (empty-stack)
   (push (val scheme-value?) (bottom-stack stack?)))
 
-(define empty-stack?
-  (lambda(the-stack)
-    (cases stack the-stack
-      (empty-stack #t))))
-
-(define pop
-  (lambda(the-stack)
-    (cases stack the-stack
-      (empty-stack () '())
-      (push (val bottom-stack)
-            bottom-stack))))
-
-(define top
-  (lambda(the-stack)
-    (cases stack the-stack
-      (empty-stack () '())
-      (push (val bottom-stack)
-            val))))
-
-(define parse-stack
-  (lambda (the-stack)
-    (cond
-      [(equal? (top) 'empty-stack) (empty-stack)]
-      [(equal? (car the-stack) 'push) (push (top) (parse-stack (pop the-stack)))]
-      [else (eopl:error 'stack "La pila ingresada no es válida")])))
-
+;pruebas
 (define s1
   (push 'a
         (push 'b
@@ -49,7 +34,46 @@
 
 
 (push "s" (empty-stack))
-(empty-stack? (empty-stack))
 (push "s" s1)
+;----------------------------------------------------------------------------------------------------
+
+;empty-stack? : stack -> boolean
+;usage: (empty-stack? stack) retorna un booleano al comparar si el stack que recibe es vacío
+
+(define empty-stack?
+  (lambda(the-stack)
+    (cases stack the-stack
+      (empty-stack #t))))
+
+;pruebas
+(empty-stack? (empty-stack))
+
+;----------------------------------------------------------------------------------------------------
+
+;pop : the-stack -> list
+;usage : (pop stack) retorna una lista retirando el elemento inicial del stack
+
+(define pop
+  (lambda(the-stack)
+    (cases stack the-stack
+      (empty-stack () '())
+      (push (val bottom-stack)
+            bottom-stack))))
+;pruebas
 (pop s1)
+
+;----------------------------------------------------------------------------------------------------
+;top : the-stack -> list
+;usage : (top stack) retorna el elemento superior del stack
+
+(define top
+  (lambda(the-stack)
+    (cases stack the-stack
+      (empty-stack () '())
+      (push (val bottom-stack)
+            val))))
+;pruebas
 (top(pop s1))
+
+
+
