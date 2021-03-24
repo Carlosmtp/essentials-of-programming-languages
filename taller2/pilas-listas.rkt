@@ -18,9 +18,9 @@
     (equal? (car stack) 'empty-stack)))
 
 ;push stack
-(define push-stack
+(define push
   (lambda(val stack)
-  (list 'push val stack)))
+    (list 'push val stack)))
 
 ;pop
 (define pop
@@ -36,10 +36,15 @@
       [(empty-stack? stack)'()]
       [else (cadr stack)])))
 
-
 (define s1
-  (push-stack 'a
-        (push-stack 'b
-              (push-stack 'c
-                    (push-stack 'd
+  (push 'a
+        (push 'b
+              (push 'c
+                    (push 'd
                           (empty-stack))))))
+
+(push "s" '(empty-stack))
+(empty-stack? '(empty-stack))
+(push "s" s1)
+(pop f1)
+(top(pop s1))
