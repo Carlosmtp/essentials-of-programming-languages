@@ -1,17 +1,42 @@
 #lang eopl
 (require rackunit)
-;Bignum para N=32
+;Taller 2 - Punto 1: Bignum para N=32
 
 ;Diana Katherine Toro Ortiz - 2110046
 ;Carlos Mauricio Tovar Parra - 1741699
 ;Juan Pablo Velasco Mellizo - 1766616
 
-;******************************************************************
-;Implementación Bignum para N=32
+;----------------------------GRAMÁTICA DE BIGNUM-------------------------------------------
 
+;para N=32
+;<bignum> ::=empty ,  (n=0)
+;                ::= (cons r [q]) , (n=qN+r  0<=r <N)
+
+
+;--------------------------IMPLEMENTACIÓN DE BIGNUM-------------------------------------
+
+;Base
 (define N 32)
+
+;----------------------------------------------------------------------------------------------------
+
+;zero: void -> null list
+;purpose: definición de n=0
+;usage: zero() retorna una lista vacía
 (define zero (lambda () '()))
+
+;----------------------------------------------------------------------------------------------------
+
+;is-zero?: list -> boolean
+;purpose: verificar si la lista ingresada es zero
+;usage: (is-zero? n) retorna #t si n es zero, de lo contrario retorna #f
 (define is-zero? (lambda (n) (or (null? n) (equal? n '(0)))))
+
+;----------------------------------------------------------------------------------------------------
+
+;valid-in-N-base?: list -> boolean
+;purpose: verificar si la lista ingresada es un n válido en la base N
+;usage: (valid-in-N-base n) retorna #t si n es válido en la base N, de lo contrario retorna #f
 (define valid-in-N-base?
   (lambda (n)
     (cond
@@ -19,6 +44,13 @@
       [(>= (car n) N) #f]
       [(<(car n) N) (valid-in-N-base? (cdr n))])))
 
+;----------------------------------------------------------------------------------------------------
+
+;sucessor: list -> list
+;purpose: retornar el sucesor de n en base N
+;usage (successor n) retrona una lista con el sucesor de n si es una
+;                             representación válida en N, de lo contrario
+;                             retorna un error
 (define successor
   (lambda (n)
     (cond
@@ -30,6 +62,13 @@
          [(< (car n) (- N 1)) (cons (+ (car n) 1 ) (cdr n))])]
       [else (eopl:error 'Bignum "No se pueden representar números con dígitos mayores o iguales a N")])))
 
+;----------------------------------------------------------------------------------------------------
+
+;predecessor: list -> list
+;purpose: retornar el predecesor de n en base N
+;usage (successor n) retrona una lista con el predecesor de n si es una
+;                             representación válida en N, de lo contrario
+;                             retorna un error
 (define predecessor
     (lambda (n)
     (cond
@@ -41,43 +80,65 @@
          [else (cons (- (car n) 1 ) (cdr n))])]
       [else (eopl:error 'Bignum "No se pueden representar números con dígitos mayores o iguales a N")])))
 
-;******************************************************************
 
-;******************************************************************
-; Código Cliente
+;-------------------------------------CÓDIGO CLIENTE------------------------------------------
 
+;suma: list -> list
+;purpose: sumar dos n en base N
+;usage (suma x y) retorna la suma en base N de x e y
 (define suma
   (lambda (x y)
     (if (is-zero? x)
         y
         (successor (suma (predecessor x) y)))))
 
+;----------------------------------------------------------------------------------------------------
+
+;resta: list -> list
+;purpose: restar dos n en base N
+;usage (resta x y) retorna la resta en base N de x e y
 (define resta
   (lambda (x y)
     (if (is-zero? y)
         x
         (predecessor (resta  x (predecessor y))))))
 
+;----------------------------------------------------------------------------------------------------
+
+;multiplicacion: list -> list
+;purpose: multiplicar dos n en base N
+;usage (multiplicacion x y) retorna la multiplicación en base N de x e y
 (define multiplicacion
   (lambda (x y)
     (if (is-zero? x)
         (zero)
         (suma (multiplicacion (predecessor x) y) y))
     ))
-    
+
+;----------------------------------------------------------------------------------------------------
+
+;potencia: list -> list
+;purpose: realizar potencia de dos n en base N
+;usage (multiplicacion x y) retorna la potencia x a la y en base N
 (define potencia
   (lambda (x y)
     (if (is-zero? y)
         (successor y)
         (multiplicacion (potencia x (predecessor y)) x))))
 
+;----------------------------------------------------------------------------------------------------
+
+;factorial: list -> list
+;purpose: realizar el factorial de un n en base N
+;usage (factorial x y) retorna el factorial de x en base N
 (define factorial
   (lambda (n)
     (if (is-zero? n)
         (successor n)
         (multiplicacion n (factorial (predecessor n))))))
-;******************************************************************
-;Pruebas
+
+;------------------------------------PRUEBAS-------------------------------------------------------
+
 
 (check-equal? (suma '(2 0 1) '(1 2)) '(3 2 1)) ; En decimal: 1026 + 65 = 1091
 (check-equal? (suma '(15 24 8) '(12 27)) '(27 19 9)) ; En decimal: 8975 + 876 = 9851

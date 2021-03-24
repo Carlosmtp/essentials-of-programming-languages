@@ -1,13 +1,16 @@
 #lang eopl
 (require rackunit)
-;
+;Taller 2 - Punto 4: Ambientes
 
 ;Diana Katherine Toro Ortiz - 2110046
 ;Carlos Mauricio Tovar Parra - 1741699
 ;Juan Pablo Velasco Mellizo - 1766616
 
+;----------------------------GRAMÁTICA DE AMBIENTES--------------------------------------
 ;Env = (empty-env) | (extend-env Var SchemeVal Env)
 ;Var = Sym
+
+;-------------------------IMPLEMENTACIÓN DE AMBIENTES---------------------------------
 
 ;empty-env : () → Env
 (define empty-env
@@ -47,27 +50,7 @@ saved-val
   (lambda (env)
     (eopl:error apply-env "Bad environment: ~s" env)))
 
-
-(define invert-env
-  (lambda (env)
-    (cond
-      [(null? env) (cons 'empty-env env)]
-      [else (cons (invert-env (cdr env)) (car env))])))
-
-(define count-env
-  (lambda (env count)
-    (cond
-      [(equal? (car env) 'empty-env) count]
-      [else (count-env (cadddr env) (+ count 1))])))
-
-(define cartesian-product
-  (lambda (lst1 lst2)
-    (cond
-      [(equal? (length lst1) (length lst2))
-       (cond
-         [(zero? (length lst1)) empty]
-         [else (cons (list (car lst1) (car lst2)) (cartesian-product (cdr lst1) (cdr lst2)))])]
-      [else (eopl:error 'cartesian-product: " Lists of different lengths have been entered")])))
+;-------------------------IMPLEMENTACIÓN DE CHECKENV---------------------------------
 
 (define check-env
   (lambda (env n)
@@ -81,12 +64,44 @@ saved-val
       [else (check-env (cadddr env) n)]
       )))
 
+;-------------------------
+;Funciones auxiliares
+
+;count-env : Env × Int → Int
+;purpose: cuenta los ambientes extendidos de un ambiente
+;usage: count-env(env n) retorna n más el número de ambientes extendidos de env
+(define count-env
+  (lambda (env count)
+    (cond
+      [(equal? (car env) 'empty-env) count]
+      [else (count-env (cadddr env) (+ count 1))])))
+
+;cartesian-product : list x list → list of lists
+;purpose: realiza el producto cartesiano de dos listas
+;usage: (cartesian-product list1 list2) retorna
+;           ((list1(sub-0)  list2(sub-0)) (list1(sub-1) list2(sub-1)) ... (list1(sub-n) list2(sub-n)))
+;            si list1 y list2 son del mismo tamaño, de lo contrario retorna un error
+(define cartesian-product
+  (lambda (lst1 lst2)
+    (cond
+      [(equal? (length lst1) (length lst2))
+       (cond
+         [(zero? (length lst1)) empty]
+         [else (cons (list (car lst1) (car lst2)) (cartesian-product (cdr lst1) (cdr lst2)))])]
+      [else (eopl:error 'cartesian-product: " Lists of different lengths have been entered")])))
+
+;----------------------------------------PRUEBAS------------------------------------------------
+
+;-------------------------
+;se instancia un ambiente
 (define e
   (extend-env 'y 8
              (extend-env* '(x z w) '(1 4 5)
                          (extend-env 'a 7
                                     (empty-env)))))
 
+;-------------------------
+;las pruebas
 (check-equal? (check-env e 0) '())
 (check-equal? (check-env e 1) '((a 7)))
 (check-equal? (check-env e 2) '((x 1) (z 4) (w 5)))
