@@ -1,16 +1,30 @@
 #lang eopl
-;
+;Taller 2 - Punto 6: Notación prefijo polaca
 
 ;Diana Katherine Toro Ortiz - 2110046
 ;Carlos Mauricio Tovar Parra - 1741699
 ;Juan Pablo Velasco Mellizo - 1766616
 
+;-----------------------------GRAMÁTICA DE PREFIX-------------------------------------------
+
+;Prefix-list ::= (Prefix-exp)
+;              pref-exp (pref)
+;Prefix-exp ::= Int
+;              const-exp (num)
+;              ::= - Prefix-exp Prefix-exp
+;              diff-exp (operand1 operand2)
+
+;-------------------------IMPLEMENTACIÓN DE PREFIX---------------------------------------
+
+;prefix-exp : 
+;usage : (stack) = 
 (define-datatype prefix-exp prefix-exp?
   (const-exp
    (num integer?))
   (diff-exp
    (operand1 prefix-exp?)
    (operand2 prefix-exp?)))
+
 
 (define-datatype prefix-list prefix-list?
   (pref-exp
@@ -58,13 +72,3 @@
       (const-exp (num) (list num))
       (diff-exp (operand1 operand2)
                (append (list '-) (append (unparse-prefix-exp operand1) (unparse-prefix-exp operand2)))))))
-
-(define exp1 (diff-exp
-(diff-exp
-(const-exp 3)
-(const-exp 2))
-(diff-exp
-(const-exp 4)
-(diff-exp
-(const-exp 12)
-(const-exp 7)))))
