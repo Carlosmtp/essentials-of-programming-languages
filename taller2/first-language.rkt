@@ -50,19 +50,25 @@
 (define unparse-expresion
   (lambda (exp)
     (cases expresion exp
-      (num-lit (num) num)
+      (num-lit (num) (number->string num))
       (exp-lit (exp1 op exp2)
-               (list (unparse-expresion exp1) (unparse-primitiva op) ( unparse-expresion exp2)))
-      (variable (id) id)
+               (string-append (unparse-expresion exp1)" "(unparse-primitiva op)" "( unparse-expresion exp2)))
+      (variable (id) (symbol->string (car id)))
       (declaracion (id exps cuerpo)
-                   (append '(var)
-                          (append id '(=) (map (lambda (x) (unparse-expresion x)) exps) '(in) (list (unparse-expresion cuerpo))))))))
+                   (string-append
+                    "var "
+                    (symbol->string (car id))
+                    " = "
+                    (car (map (lambda (x) (unparse-expresion x)) exps))
+                    " in " (unparse-expresion cuerpo))))))
+
+
 
 
 (define unparse-primitiva
   (lambda (sym)
     (cases operacion sym
-      (prim-suma () +)
-      (prim-resta () -)
-      (prim-multiplicacion () *)
-      (prim-division () /))))
+      (prim-suma () "+")
+      (prim-resta () "-")
+      (prim-multiplicacion () "*")
+      (prim-division () "/"))))
