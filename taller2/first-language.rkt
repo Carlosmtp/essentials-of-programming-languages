@@ -1,4 +1,5 @@
 #lang eopl
+(require rackunit)
 ;Taller 2 - Punto 7: Primer lenguaje
 
 ;Diana Katherine Toro Ortiz - 2110046
@@ -95,3 +96,8 @@
                     " = "
                     (car (map (lambda (x) (unparse-expresion x)) exps))
                     " in " (unparse-expresion cuerpo))))))
+
+
+(check-equal? (unparse-program (scan&parse (unparse-program (scan&parse "(5 + 5)")))) "(5 + 5)")
+(check-equal? (unparse-program (scan&parse (unparse-program (scan&parse "465")))) "465")
+(check-equal? (unparse-program (scan&parse (unparse-program (scan&parse "var v = 5 in 5")))) "var v = 5 in 5")
