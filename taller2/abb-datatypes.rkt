@@ -4,7 +4,6 @@
 
 ;Diana Katherine Toro Ortiz - 2110046
 ;Carlos Mauricio Tovar Parra - 1741699
-;Juan Pablo Velasco Mellizo - 1766616
 
 ;       Gramática Árbol Binario 
 
@@ -23,7 +22,7 @@
 
 ;---------------------------------------Unparse---------------------------------
 
-;parse-bintree : sintaxis abstracta → sintaxis concreta
+;unparse-bintree : sintaxis abstracta → sintaxis concreta
 ;usage : (parse-bintree arbol) = retorna arbol binario en sintaxis concreta
 
 (define unparse-bintree
