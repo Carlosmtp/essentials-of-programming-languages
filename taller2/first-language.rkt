@@ -52,7 +52,7 @@
     (cases expresion exp
       (num-lit (num) (number->string num))
       (exp-lit (exp1 op exp2)
-               (string-append (unparse-expresion exp1)" "(unparse-primitiva op)" "( unparse-expresion exp2)))
+               (string-append "("(unparse-expresion exp1)" "(unparse-primitiva op)" "( unparse-expresion exp2)")"))
       (variable (id) (symbol->string (car id)))
       (declaracion (id exps cuerpo)
                    (string-append
