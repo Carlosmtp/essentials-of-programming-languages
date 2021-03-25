@@ -1,5 +1,5 @@
 #lang eopl
-;
+;Taller 2 - Punto 3: Pilas con listas
 ;Diana Katherine Toro Ortiz - 2110046
 ;Carlos Mauricio Tovar Parra - 1741699
 ;Juan Pablo Velasco Mellizo - 1766616
